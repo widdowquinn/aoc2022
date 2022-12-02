@@ -14664,20 +14664,37 @@ C Z
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">parse_strategy</span><span class="p">(</span><span class="n">fpath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Load strategy (puzzle input) data</span>
+<span class="sd">    </span>
+<span class="sd">    :param fpath:  path to puzzle data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">strategy</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">with</span> <span class="n">fpath</span><span class="o">.</span><span class="n">open</span><span class="p">()</span> <span class="k">as</span> <span class="n">ifh</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="p">[</span><span class="n">_</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">ifh</span><span class="o">.</span><span class="n">readlines</span><span class="p">()]:</span>
             <span class="n">strategy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
             
+    <span class="c1"># Puzzle data is split into tuple pairs of (opponent, me) plays</span>
     <span class="k">return</span> <span class="n">strategy</span>
 
 <span class="k">def</span> <span class="nf">score_round</span><span class="p">(</span><span class="nb">round</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">strategy_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">score_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Return score for a single round of the game</span>
+<span class="sd">    </span>
+<span class="sd">    :param round:  a single (opponent, me) game round</span>
+<span class="sd">    :param strategy_dict:  dict of what each symbol means (rock, paper, scissors)</span>
+<span class="sd">    :param score_dict:  dict of game outcomes with this strategy    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">opp</span><span class="p">,</span> <span class="n">me</span> <span class="o">=</span> <span class="p">(</span><span class="n">strategy_dict</span><span class="p">[</span><span class="n">_</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">round</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">score_dict</span><span class="p">[</span><span class="n">opp</span><span class="p">][</span><span class="n">me</span><span class="p">]</span>
             
     <span class="k">return</span> <span class="n">score</span>
 
-<span class="k">def</span> <span class="nf">play</span><span class="p">(</span><span class="n">strategy</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">],</span> <span class="n">strategy_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">score_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">play</span><span class="p">(</span><span class="n">strategy</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">],</span> <span class="n">strategy_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">score_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Iterate over the strategy and report accumulated score</span>
+<span class="sd">    </span>
+<span class="sd">    :param strategy:  order of game events</span>
+<span class="sd">    :param strategy_dict:  dict of what each symbol means (rock, paper, scissors)</span>
+<span class="sd">    :param score_dict:  dict of game outcomes with this strategy</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="nb">round</span> <span class="ow">in</span> <span class="n">strategy</span><span class="p">:</span>
         <span class="n">score</span> <span class="o">+=</span> <span class="n">score_round</span><span class="p">(</span><span class="nb">round</span><span class="p">,</span> <span class="n">strategy_dict</span><span class="p">,</span> <span class="n">score_dict</span><span class="p">)</span>
@@ -14685,6 +14702,10 @@ C Z
     <span class="k">return</span> <span class="n">score</span>
     
 <span class="k">def</span> <span class="nf">part1</span><span class="p">(</span><span class="n">fpath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Play the strategy for this puzzle solution</span>
+<span class="sd">    </span>
+<span class="sd">    :param fpath:  path to puzzle data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Translate the strategy for readability</span>
     <span class="n">strategy_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="s2">&quot;rock&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="s2">&quot;paper&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="s2">&quot;scissors&quot;</span><span class="p">,</span>
                      <span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="s2">&quot;rock&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="s2">&quot;paper&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="s2">&quot;scissors&quot;</span><span class="p">}</span>
@@ -14694,8 +14715,9 @@ C Z
                   <span class="s2">&quot;paper&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;rock&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;paper&quot;</span><span class="p">:</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;scissors&quot;</span><span class="p">:</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">6</span><span class="p">},</span>
                   <span class="s2">&quot;scissors&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;rock&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;paper&quot;</span><span class="p">:</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;scissors&quot;</span><span class="p">:</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">3</span><span class="p">}}</span>
 
-    <span class="n">strategy</span> <span class="o">=</span> <span class="n">parse_strategy</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
-    <span class="n">score</span> <span class="o">=</span> <span class="n">play</span><span class="p">(</span><span class="n">strategy</span><span class="p">,</span> <span class="n">strategy_dict</span><span class="p">,</span> <span class="n">score_dict</span><span class="p">)</span>
+    <span class="n">strategy</span> <span class="o">=</span> <span class="n">parse_strategy</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>  <span class="c1"># load strategy (puzzle data)</span>
+    <span class="n">score</span> <span class="o">=</span> <span class="n">play</span><span class="p">(</span><span class="n">strategy</span><span class="p">,</span> <span class="n">strategy_dict</span><span class="p">,</span> <span class="n">score_dict</span><span class="p">)</span>  <span class="c1"># play the strategy</span>
+    
     <span class="k">return</span> <span class="n">score</span>
 </pre></div>
 
@@ -14811,7 +14833,12 @@ In the third round, you will defeat your opponent's Scissors with Rock for a sco
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">part2</span><span class="p">(</span><span class="n">fpath</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="c1"># Translate the strategy for readability</span>
+    <span class="sd">&quot;&quot;&quot;Play the strategy for this puzzle solution</span>
+<span class="sd">    </span>
+<span class="sd">    :param fpath:  path to puzzle data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Translate the strategy for readability</span>
     <span class="n">strategy_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="s2">&quot;rock&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="s2">&quot;paper&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="s2">&quot;scissors&quot;</span><span class="p">,</span>
                      <span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="s2">&quot;lose&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="s2">&quot;draw&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="s2">&quot;win&quot;</span><span class="p">}</span>
 
@@ -14820,8 +14847,8 @@ In the third round, you will defeat your opponent's Scissors with Rock for a sco
                   <span class="s2">&quot;paper&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;win&quot;</span><span class="p">:</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;lose&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;draw&quot;</span><span class="p">:</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span><span class="p">},</span>
                   <span class="s2">&quot;scissors&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;win&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;lose&quot;</span><span class="p">:</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;draw&quot;</span><span class="p">:</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">3</span><span class="p">}}</span>    
 
-    <span class="n">strategy</span> <span class="o">=</span> <span class="n">parse_strategy</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
-    <span class="n">score</span> <span class="o">=</span> <span class="n">play</span><span class="p">(</span><span class="n">strategy</span><span class="p">,</span> <span class="n">strategy_dict</span><span class="p">,</span> <span class="n">score_dict</span><span class="p">)</span>
+    <span class="n">strategy</span> <span class="o">=</span> <span class="n">parse_strategy</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>  <span class="c1"># load in the playing strategy (puzzle data)</span>
+    <span class="n">score</span> <span class="o">=</span> <span class="n">play</span><span class="p">(</span><span class="n">strategy</span><span class="p">,</span> <span class="n">strategy_dict</span><span class="p">,</span> <span class="n">score_dict</span><span class="p">)</span>  <span class="c1"># play the game with the loaded strategy</span>
     <span class="k">return</span> <span class="n">score</span>
 </pre></div>
 
