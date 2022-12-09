@@ -16,3 +16,5 @@ This repository contains (attempted) solutions to Advent of Code 2022
 - [day 06](./day06.html)
 - [day 07](./day07.html)
 - [day 08](./day08.html)
+- [day 09](./day09.html)
+  
