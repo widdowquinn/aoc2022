@@ -21,3 +21,4 @@ This repository contains (attempted) solutions to Advent of Code 2022
 - [day 11](./day11.html)
 - [day 12](./day12.html)
 - [day 13](./day13.html)
+- [day 14](./day14.html)
