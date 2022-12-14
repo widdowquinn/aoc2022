@@ -14727,6 +14727,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Python imports</span>
 
+<span class="kn">from</span> <span class="nn">ast</span> <span class="kn">import</span> <span class="n">literal_eval</span>  <span class="c1"># safe eval</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">cmp_to_key</span>  <span class="c1"># convert a comparator function to a sort key</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">prod</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
@@ -14773,7 +14774,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
         <span class="n">packet</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># holds packet pair</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="p">[</span><span class="n">_</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">ifh</span><span class="o">.</span><span class="n">readlines</span><span class="p">()]:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>  <span class="c1"># if there is line content, it&#39;s part of a packet</span>
-                <span class="n">packet</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>  <span class="c1"># let&#39;s pretend this is safe!</span>
+                <span class="n">packet</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>  <span class="c1"># let&#39;s pretend this is safe!</span>
             <span class="k">else</span><span class="p">:</span>  <span class="c1"># otherwise it&#39;s a divider</span>
                 <span class="n">packets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>  <span class="c1"># add last packet pair to packets list</span>
                 <span class="n">packet</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># new container for a packet pair</span>
